@@ -13,5 +13,6 @@ http://192.168.4.1
 
 # Dependencies
 
-WifiManager (development version)
-PubSubClient
+(WifiManager (development version))[https://github.com/tzapu/WiFiManager/tree/development]
+
+(PubSubClient)[https://github.com/knolleary/pubsubclient]
