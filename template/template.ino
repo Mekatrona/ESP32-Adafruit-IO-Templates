@@ -8,6 +8,9 @@ const char* mqttUser = "username";
 const char* mqttPassword = "password";
 const char* clientId = "ESP32-XXX";
 
+String feedId = "sensor";
+String publishFeedUrl = ""; // Adafruit IO feed structure. Will update after user input!
+
 
 #include <Ticker.h>
 Ticker ticker;
@@ -37,7 +40,7 @@ void setup() {
   WiFiManager wm;
 
   //reset settings - for testing
-  //wm.resetSettings();
+  wm.resetSettings();
 
   // MQTT input fields for the manager
   WiFiManagerParameter customNodeId("id", "Node ID", clientId, 40);
@@ -56,6 +59,8 @@ void setup() {
   wm.addParameter(&customMqttPassword);
   mqttPassword = customMqttPassword.getValue();
 
+ 
+  
   wm.setAPCallback(configModeCallback);
   if (!wm.autoConnect("ESP32 Node","MyEspIsFantastic")) {
     Serial.println("Failed to connect and hit timeout");
@@ -63,7 +68,7 @@ void setup() {
     delay(1000);
   }
 
-  Serial.println("Connecte to XXX");
+  Serial.println("Connected to Wifi");
   ticker.detach();
   digitalWrite(LED_PIN, LOW);
 
@@ -84,6 +89,12 @@ void setup() {
     if (connectionSucceeded) {
       Serial.print("Connected to ");
       Serial.println(mqttServer);
+
+      // Adafruit IO feed url structure
+      publishFeedUrl = "";
+      publishFeedUrl += mqttUser;
+      publishFeedUrl += "/feeds/";
+        
     } else {
       Serial.print("Failed with state ");
       Serial.print(mqttClient.state());
@@ -101,9 +112,10 @@ void loop() {
   long now = millis();
   long publishTime = 10000;  // 10s
   if (now - lastRequest >= publishTime) {
+
     char value[100];
     sprintf(value, "%d", sensorValue);
-    mqttClient.publish("kriffe/feeds/sensor", value);
+    mqttClient.publish((char*)publishFeedUrl.c_str(), value);
     lastRequest = now;
     Serial.print("Published ");
     Serial.println(value);
