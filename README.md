@@ -5,7 +5,7 @@ Used for publishing mqtt events to Adafruit IO server with the help of WifiManag
 Libraries needed included as top level library folder
 
 
-If LED is blinking, Open IP in browser for configuration
+If LED is blinkin, connect wifi to ESP Node with password and op IP in browser for configuration
 ```
 http://192.168.4.1
 ```
